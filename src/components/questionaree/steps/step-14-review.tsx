@@ -1,11 +1,15 @@
 "use client"
 
+import { useState } from "react"
 import { useQuestionnaire } from "@/context/questionnaire-context"
+import { useAuth } from "@/context/auth-context"
 import { StepWrapper } from "../step-wrapper"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Pencil, Check } from "lucide-react"
+import { createStore } from "@/lib/stores"
+import { ApiError } from "@/lib/api-client"
 
 interface ReviewCardProps {
   title: string
@@ -39,10 +43,34 @@ function ReviewCard({ title, step, children }: ReviewCardProps) {
 
 export function Step14Review() {
   const { data, updateData, nextStep, prevStep } = useQuestionnaire()
-  
-  const handleSubmit = () => {
-    if (data.confirmed) {
+  const { setStoreId } = useAuth()
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState("")
+
+  const handleSubmit = async () => {
+    if (!data.confirmed || submitting) return
+
+    setSubmitError("")
+    setSubmitting(true)
+    try {
+      const store = await createStore({
+        name: data.businessName,
+        contactPerson: data.contactPerson,
+        designation: data.designation || undefined,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        brandTagline: data.brandTagline || undefined,
+        businessNature: data.businessNature || "product",
+        businessType: data.businessType === "pan" ? "pan" : "gst",
+        gstNumber: data.gstNumber || undefined,
+        panNumber: data.panNumber || undefined,
+      })
+      setStoreId(store.id)
       nextStep()
+    } catch (err) {
+      setSubmitError(err instanceof ApiError ? err.message : "Could not create your store. Please try again.")
+    } finally {
+      setSubmitting(false)
     }
   }
   
@@ -173,15 +201,19 @@ export function Step14Review() {
             I understand that this information will be used to create my business website.
           </Label>
         </div>
-        
+
+        {submitError && (
+          <p className="text-sm text-destructive">{submitError}</p>
+        )}
+
         <Button
           onClick={handleSubmit}
-          disabled={!data.confirmed}
+          disabled={!data.confirmed || submitting}
           className="w-full gap-2 bg-primary hover:bg-primary/90"
           size="lg"
         >
           <Check className="w-4 h-4" />
-          Submit Questionnaire
+          {submitting ? "Creating your store..." : "Submit Questionnaire"}
         </Button>
       </div>
       
