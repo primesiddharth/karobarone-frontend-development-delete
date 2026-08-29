@@ -19,10 +19,7 @@ export default function ExcellencePage() {
 
       <HeroCarousel />
 
-      <Marquee
-        text="INNOVATION • EXCELLENCE • RELIABILITY"
-        direction="left"
-      />
+      <Marquee text="INNOVATION • EXCELLENCE • RELIABILITY" direction="left" />
 
       <ProductsSection />
 

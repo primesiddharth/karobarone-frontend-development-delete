@@ -38,7 +38,9 @@ function WebsiteMediaContent({ storeId }: { storeId: string }) {
     try {
       setMedia(await listWebsiteMedia(storeId));
     } catch (err) {
-      setLoadError(err instanceof ApiError ? err.message : "Could not load media.");
+      setLoadError(
+        err instanceof ApiError ? err.message : "Could not load media.",
+      );
     } finally {
       setLoading(false);
     }
@@ -56,7 +58,11 @@ function WebsiteMediaContent({ storeId }: { storeId: string }) {
       const uploaded = await uploadWebsiteMedia(storeId, type, file);
       setMedia((prev) => [...prev.filter((m) => m.type !== type), uploaded]);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Upload failed. Please try again.");
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Upload failed. Please try again.",
+      );
     } finally {
       setUploading(null);
     }
@@ -68,7 +74,9 @@ function WebsiteMediaContent({ storeId }: { storeId: string }) {
       await deleteWebsiteMedia(id);
       setMedia((prev) => prev.filter((m) => m.id !== id));
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not remove media.");
+      setError(
+        err instanceof ApiError ? err.message : "Could not remove media.",
+      );
     } finally {
       setBusyId(null);
     }
@@ -82,11 +90,15 @@ function WebsiteMediaContent({ storeId }: { storeId: string }) {
       <div className="max-w-3xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Logo & Banner</h1>
-          <p className="text-slate-500 mt-2">Upload the brand images shown across your storefront.</p>
+          <p className="text-slate-500 mt-2">
+            Upload the brand images shown across your storefront.
+          </p>
         </div>
 
         {error && (
-          <p className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2">{error}</p>
+          <p className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2">
+            {error}
+          </p>
         )}
 
         {loading ? (
@@ -155,7 +167,11 @@ function MediaCard({
 
       <div className="mt-4 rounded-xl border border-dashed border-slate-300 bg-slate-50 h-40 flex items-center justify-center overflow-hidden">
         {media ? (
-          <img src={media.url} alt={label} className="w-full h-full object-contain" />
+          <img
+            src={media.url}
+            alt={label}
+            className="w-full h-full object-contain"
+          />
         ) : (
           <span className="text-slate-400 text-sm">No image uploaded</span>
         )}

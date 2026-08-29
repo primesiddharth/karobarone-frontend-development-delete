@@ -1,4 +1,4 @@
-import App from '@/components/design1/App'
+import App from "@/components/design1/App";
 export default function Page() {
-  return <App />
+  return <App />;
 }

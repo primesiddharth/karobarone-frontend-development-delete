@@ -59,6 +59,10 @@ export function updateStore(storeId: string, payload: UpdateStorePayload) {
   });
 }
 
+export function deleteStore(storeId: string) {
+  return apiRequest<void>(`/api/v1/stores/${storeId}`, { method: "DELETE" });
+}
+
 export function publishStore(storeId: string) {
   return apiRequest<Store>(`/api/v1/stores/${storeId}/publish`, { method: "POST" });
 }

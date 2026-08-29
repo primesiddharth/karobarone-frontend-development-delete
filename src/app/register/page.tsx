@@ -28,7 +28,9 @@ export default function RegisterPage() {
   const router = useRouter();
   const { register } = useAuth();
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>(
+    {},
+  );
   const [submitError, setSubmitError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -64,7 +66,8 @@ export default function RegisterPage() {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
-    if (!formData.agreedToTerms) newErrors.agreedToTerms = "You must accept the terms";
+    if (!formData.agreedToTerms)
+      newErrors.agreedToTerms = "You must accept the terms";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -86,7 +89,11 @@ export default function RegisterPage() {
       });
       router.push("/questionaree");
     } catch (err) {
-      setSubmitError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+      setSubmitError(
+        err instanceof ApiError
+          ? err.message
+          : "Something went wrong. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -111,12 +118,18 @@ export default function RegisterPage() {
             <div className="bg-[#5b4ef9] p-2 rounded-lg">
               <Zap className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-semibold text-white">KarobarOne</span>
+            <span className="text-2xl font-semibold text-white">
+              KarobarOne
+            </span>
           </div>
 
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
-            <p className="text-white/70">Sign up to start building your store</p>
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Create Account
+            </h1>
+            <p className="text-white/70">
+              Sign up to start building your store
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -183,7 +196,9 @@ export default function RegisterPage() {
                 </a>
               </span>
             </label>
-            {errors.agreedToTerms && <p className="text-red-200 text-xs">{errors.agreedToTerms}</p>}
+            {errors.agreedToTerms && (
+              <p className="text-red-200 text-xs">{errors.agreedToTerms}</p>
+            )}
 
             {submitError && (
               <p className="bg-red-500/20 border border-red-300/40 text-red-100 text-sm rounded-lg px-4 py-2">
@@ -203,7 +218,10 @@ export default function RegisterPage() {
           <div className="mt-6 text-center">
             <p className="text-white/70 text-sm">
               Already have an account?{" "}
-              <Link href="/login" className="text-white hover:underline font-semibold">
+              <Link
+                href="/login"
+                className="text-white hover:underline font-semibold"
+              >
                 Login
               </Link>
             </p>
@@ -235,7 +253,9 @@ function Field({
     <div>
       <label className="block text-white/80 mb-2 text-sm">{label}</label>
       <div className="relative">
-        {icon && <div className="absolute left-4 top-1/2 -translate-y-1/2">{icon}</div>}
+        {icon && (
+          <div className="absolute left-4 top-1/2 -translate-y-1/2">{icon}</div>
+        )}
         <input
           type={type}
           placeholder={placeholder}

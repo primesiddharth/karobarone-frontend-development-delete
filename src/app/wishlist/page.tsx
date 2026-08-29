@@ -6,8 +6,97 @@ import { money } from "@/components/commerce/data";
 import { useState } from "react";
 
 const initial = [
- {id:1,name:"Classic Linen Shirt",category:"Men's fashion",price:1899,image:"LS"},
- {id:2,name:"Minimal Leather Wallet",category:"Accessories",price:1299,image:"LW"},
- {id:3,name:"Everyday Sneakers",category:"Footwear",price:2499,image:"SN"},
+  {
+    id: 1,
+    name: "Classic Linen Shirt",
+    category: "Men's fashion",
+    price: 1899,
+    image: "LS",
+  },
+  {
+    id: 2,
+    name: "Minimal Leather Wallet",
+    category: "Accessories",
+    price: 1299,
+    image: "LW",
+  },
+  {
+    id: 3,
+    name: "Everyday Sneakers",
+    category: "Footwear",
+    price: 2499,
+    image: "SN",
+  },
 ];
-export default function WishlistPage(){ const [items,setItems]=useState(initial); return <CommerceShell title="Wishlist" eyebrow="Orders & Payments"><div className="mx-auto max-w-7xl px-6"><div className="mb-5 flex items-center justify-between"><p className="text-sm text-gray-500">{items.length} saved products</p><Link href="/cart" className="text-sm font-medium text-[#5b4ef9] hover:underline">View Cart</Link></div>{items.length ? <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{items.map(item=><article key={item.id} className="overflow-hidden rounded-2xl border border-gray-200 bg-white transition hover:-translate-y-0.5 hover:shadow-lg"><div className="relative flex h-56 items-center justify-center bg-gray-100 text-lg font-semibold text-gray-400"><span>{item.image}</span><button onClick={()=>setItems(items.filter(i=>i.id!==item.id))} className="absolute right-4 top-4 rounded-full bg-white p-2 text-gray-500 shadow-sm hover:text-red-600"><Heart className="h-4 w-4 fill-current" /></button></div><div className="p-5"><p className="text-xs uppercase tracking-wider text-gray-400">{item.category}</p><h2 className="mt-2 font-semibold">{item.name}</h2><div className="mt-3 flex items-center justify-between"><span className="font-semibold">{money(item.price)}</span><span className="text-xs text-green-600">In stock</span></div><div className="mt-5 flex gap-2"><button className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#5b4ef9] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#4a3ee0]"><ShoppingCart className="h-4 w-4" />Move to Cart</button><button onClick={()=>setItems(items.filter(i=>i.id!==item.id))} className="rounded-lg border border-gray-200 px-3 text-gray-500 hover:border-red-200 hover:text-red-600"><Trash2 className="h-4 w-4" /></button></div></div></article>)}</div>:<div className="rounded-2xl border border-gray-200 bg-white px-6 py-16 text-center"><Heart className="mx-auto h-8 w-8 text-gray-300"/><p className="mt-4 font-medium">Your wishlist is empty</p><p className="mt-1 text-sm text-gray-500">Save products here and come back when you are ready.</p></div>}</div></CommerceShell> }
+export default function WishlistPage() {
+  const [items, setItems] = useState(initial);
+  return (
+    <CommerceShell title="Wishlist" eyebrow="Orders & Payments">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="mb-5 flex items-center justify-between">
+          <p className="text-sm text-gray-500">{items.length} saved products</p>
+          <Link
+            href="/cart"
+            className="text-sm font-medium text-[#5b4ef9] hover:underline"
+          >
+            View Cart
+          </Link>
+        </div>
+        {items.length ? (
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((item) => (
+              <article
+                key={item.id}
+                className="overflow-hidden rounded-2xl border border-gray-200 bg-white transition hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <div className="relative flex h-56 items-center justify-center bg-gray-100 text-lg font-semibold text-gray-400">
+                  <span>{item.image}</span>
+                  <button
+                    onClick={() =>
+                      setItems(items.filter((i) => i.id !== item.id))
+                    }
+                    className="absolute right-4 top-4 rounded-full bg-white p-2 text-gray-500 shadow-sm hover:text-red-600"
+                  >
+                    <Heart className="h-4 w-4 fill-current" />
+                  </button>
+                </div>
+                <div className="p-5">
+                  <p className="text-xs uppercase tracking-wider text-gray-400">
+                    {item.category}
+                  </p>
+                  <h2 className="mt-2 font-semibold">{item.name}</h2>
+                  <div className="mt-3 flex items-center justify-between">
+                    <span className="font-semibold">{money(item.price)}</span>
+                    <span className="text-xs text-green-600">In stock</span>
+                  </div>
+                  <div className="mt-5 flex gap-2">
+                    <button className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#5b4ef9] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#4a3ee0]">
+                      <ShoppingCart className="h-4 w-4" />
+                      Move to Cart
+                    </button>
+                    <button
+                      onClick={() =>
+                        setItems(items.filter((i) => i.id !== item.id))
+                      }
+                      className="rounded-lg border border-gray-200 px-3 text-gray-500 hover:border-red-200 hover:text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-gray-200 bg-white px-6 py-16 text-center">
+            <Heart className="mx-auto h-8 w-8 text-gray-300" />
+            <p className="mt-4 font-medium">Your wishlist is empty</p>
+            <p className="mt-1 text-sm text-gray-500">
+              Save products here and come back when you are ready.
+            </p>
+          </div>
+        )}
+      </div>
+    </CommerceShell>
+  );
+}

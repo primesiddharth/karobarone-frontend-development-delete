@@ -4,7 +4,8 @@ import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Platform Admin Portal | KarobarOne",
-  description: "Platform admin portal modules, planning, and workflow structure.",
+  description:
+    "Platform admin portal modules, planning, and workflow structure.",
 };
 
 export default function PlatformAdminPortalPage() {
@@ -16,7 +17,9 @@ export default function PlatformAdminPortalPage() {
             <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
               KarobarOne portal
             </p>
-            <h1 className="mt-1 text-xl font-semibold text-slate-950">Platform Admin Portal</h1>
+            <h1 className="mt-1 text-xl font-semibold text-slate-950">
+              Platform Admin Portal
+            </h1>
           </div>
 
           <Link
@@ -32,8 +35,12 @@ export default function PlatformAdminPortalPage() {
       <main>
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-            <p className="text-xs uppercase tracking-[0.24em] text-gray-500">Admin portal</p>
-            <h2 className="mt-2 text-3xl font-semibold text-gray-900">Platform Admin Portal</h2>
+            <p className="text-xs uppercase tracking-[0.24em] text-gray-500">
+              Admin portal
+            </p>
+            <h2 className="mt-2 text-3xl font-semibold text-gray-900">
+              Platform Admin Portal
+            </h2>
             <p className="mt-3 text-sm leading-6 text-gray-600">
               Simple admin area for businesses, users, approvals, and payouts.
             </p>

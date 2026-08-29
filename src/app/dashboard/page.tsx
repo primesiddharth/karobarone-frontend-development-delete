@@ -25,7 +25,11 @@ export default function ThemePickerPage() {
       await setStoreTheme(session.storeId as string, themeId);
       setAppliedThemeId(themeId);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not apply theme. Please try again.");
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Could not apply theme. Please try again.",
+      );
     } finally {
       setApplying(null);
     }
@@ -36,7 +40,9 @@ export default function ThemePickerPage() {
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900">Website Themes</h1>
-          <p className="text-slate-500 mt-2">Pick a design for your storefront. You can change this anytime.</p>
+          <p className="text-slate-500 mt-2">
+            Pick a design for your storefront. You can change this anytime.
+          </p>
         </div>
 
         {error && (
@@ -53,13 +59,21 @@ export default function ThemePickerPage() {
                 key={theme.id}
                 onClick={() => setSelected(theme.id)}
                 className={`cursor-pointer rounded-2xl overflow-hidden border bg-white transition-all ${
-                  selected === theme.id ? "border-[#5b4ef9] ring-2 ring-[#5b4ef9]/20" : "border-slate-200 hover:border-slate-300"
+                  selected === theme.id
+                    ? "border-[#5b4ef9] ring-2 ring-[#5b4ef9]/20"
+                    : "border-slate-200 hover:border-slate-300"
                 }`}
               >
-                <img src={theme.previewImage} alt={theme.name} className="w-full h-40 object-cover object-top" />
+                <img
+                  src={theme.previewImage}
+                  alt={theme.name}
+                  className="w-full h-40 object-cover object-top"
+                />
                 <div className="p-4">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-base font-semibold text-slate-900">{theme.name}</h2>
+                    <h2 className="text-base font-semibold text-slate-900">
+                      {theme.name}
+                    </h2>
                     {isApplied && (
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600">
                         <Check className="w-3.5 h-3.5" />
@@ -67,7 +81,9 @@ export default function ThemePickerPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-slate-500 text-sm mt-1">{theme.description}</p>
+                  <p className="text-slate-500 text-sm mt-1">
+                    {theme.description}
+                  </p>
 
                   <div className="flex gap-2 mt-4">
                     <Link
@@ -87,7 +103,11 @@ export default function ThemePickerPage() {
                       disabled={applying === theme.id}
                       className="flex-1 rounded-lg bg-[#5b4ef9] px-3 py-2 text-sm font-medium text-white hover:bg-[#4a3ee0] disabled:opacity-60"
                     >
-                      {applying === theme.id ? "Applying..." : isApplied ? "Reapply" : "Use this theme"}
+                      {applying === theme.id
+                        ? "Applying..."
+                        : isApplied
+                          ? "Reapply"
+                          : "Use this theme"}
                     </button>
                   </div>
                 </div>

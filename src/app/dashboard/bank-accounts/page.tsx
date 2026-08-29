@@ -9,10 +9,11 @@ import {
   CreateBankAccountPayload,
   listBankAccounts,
   createBankAccount,
+  updateBankAccount,
   deleteBankAccount,
   setPrimaryBankAccount,
 } from "@/lib/store-bank-accounts";
-import { Landmark, Loader2, Star, Trash2 } from "lucide-react";
+import { Landmark, Loader2, Pencil, Star, Trash2, X } from "lucide-react";
 
 const emptyForm: CreateBankAccountPayload = {
   accountHolderName: "",
@@ -38,6 +39,9 @@ function BankAccountsContent({ storeId }: { storeId: string }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<CreateBankAccountPayload>(emptyForm);
+  const [savingEdit, setSavingEdit] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -45,7 +49,9 @@ function BankAccountsContent({ storeId }: { storeId: string }) {
     try {
       setAccounts(await listBankAccounts(storeId));
     } catch (err) {
-      setLoadError(err instanceof ApiError ? err.message : "Could not load bank accounts.");
+      setLoadError(
+        err instanceof ApiError ? err.message : "Could not load bank accounts.",
+      );
     } finally {
       setLoading(false);
     }
@@ -65,7 +71,9 @@ function BankAccountsContent({ storeId }: { storeId: string }) {
       setAccounts((prev) => [...prev, created]);
       setForm(emptyForm);
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not add bank account.");
+      setError(
+        err instanceof ApiError ? err.message : "Could not add bank account.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -77,7 +85,11 @@ function BankAccountsContent({ storeId }: { storeId: string }) {
       await deleteBankAccount(id);
       setAccounts((prev) => prev.filter((a) => a.id !== id));
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not delete bank account.");
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Could not delete bank account.",
+      );
     } finally {
       setBusyId(null);
     }
@@ -87,11 +99,51 @@ function BankAccountsContent({ storeId }: { storeId: string }) {
     setBusyId(id);
     try {
       const updated = await setPrimaryBankAccount(id);
-      setAccounts((prev) => prev.map((a) => (a.id === id ? updated : { ...a, isPrimary: false })));
+      setAccounts((prev) =>
+        prev.map((a) => (a.id === id ? updated : { ...a, isPrimary: false })),
+      );
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not update primary account.");
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Could not update primary account.",
+      );
     } finally {
       setBusyId(null);
+    }
+  };
+
+  const startEdit = (account: BankAccount) => {
+    setEditingId(account.id);
+    setEditForm({
+      accountHolderName: account.accountHolderName,
+      accountNumber: account.accountNumber,
+      ifscCode: account.ifscCode,
+      bankName: account.bankName,
+      branchName: account.branchName ?? "",
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditForm(emptyForm);
+  };
+
+  const handleSaveEdit = async (id: string) => {
+    setSavingEdit(true);
+    setError("");
+    try {
+      const updated = await updateBankAccount(id, editForm);
+      setAccounts((prev) => prev.map((a) => (a.id === id ? updated : a)));
+      cancelEdit();
+    } catch (err) {
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Could not update bank account.",
+      );
+    } finally {
+      setSavingEdit(false);
     }
   };
 
@@ -99,16 +151,24 @@ function BankAccountsContent({ storeId }: { storeId: string }) {
     <div className="px-6 py-10 sm:px-10">
       <div className="max-w-3xl mx-auto space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Payout Bank Accounts</h1>
-          <p className="text-slate-500 mt-2">Add the bank account(s) where your store payouts should go.</p>
+          <h1 className="text-3xl font-bold text-slate-900">
+            Payout Bank Accounts
+          </h1>
+          <p className="text-slate-500 mt-2">
+            Add the bank account(s) where your store payouts should go.
+          </p>
         </div>
 
         {error && (
-          <p className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2">{error}</p>
+          <p className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2">
+            {error}
+          </p>
         )}
 
         <section className="bg-white border border-slate-200 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Add Bank Account</h2>
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">
+            Add Bank Account
+          </h2>
           <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-4">
             <TextField
               label="Account Holder Name"
@@ -131,7 +191,9 @@ function BankAccountsContent({ storeId }: { storeId: string }) {
             <TextField
               label="IFSC Code"
               value={form.ifscCode}
-              onChange={(v) => setForm((f) => ({ ...f, ifscCode: v.toUpperCase() }))}
+              onChange={(v) =>
+                setForm((f) => ({ ...f, ifscCode: v.toUpperCase() }))
+              }
               required
             />
             <TextField
@@ -152,7 +214,9 @@ function BankAccountsContent({ storeId }: { storeId: string }) {
         </section>
 
         <section className="bg-white border border-slate-200 rounded-2xl p-6">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Your Accounts</h2>
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">
+            Your Accounts
+          </h2>
           {loading ? (
             <div className="flex items-center gap-2 text-slate-500 text-sm">
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -161,52 +225,132 @@ function BankAccountsContent({ storeId }: { storeId: string }) {
           ) : loadError ? (
             <p className="text-red-600 text-sm">{loadError}</p>
           ) : accounts.length === 0 ? (
-            <p className="text-slate-500 text-sm">No bank accounts added yet.</p>
+            <p className="text-slate-500 text-sm">
+              No bank accounts added yet.
+            </p>
           ) : (
             <div className="space-y-3">
-              {accounts.map((account) => (
-                <div
-                  key={account.id}
-                  className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 px-4 py-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex size-9 items-center justify-center rounded-lg bg-[#5b4ef9]/10 text-[#5b4ef9]">
-                      <Landmark className="w-4 h-4" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-medium text-slate-900 flex items-center gap-2">
-                        {account.accountHolderName}
-                        {account.isPrimary && (
-                          <span className="text-xs font-medium text-amber-600 flex items-center gap-1">
-                            <Star className="w-3 h-3 fill-amber-500 text-amber-500" /> Primary
-                          </span>
-                        )}
-                      </p>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        {account.bankName} • {account.accountNumber} • {account.ifscCode}
-                      </p>
+              {accounts.map((account) =>
+                editingId === account.id ? (
+                  <div
+                    key={account.id}
+                    className="rounded-xl border border-[#5b4ef9]/30 bg-[#5b4ef9]/5 px-4 py-4"
+                  >
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <TextField
+                        label="Account Holder Name"
+                        value={editForm.accountHolderName}
+                        onChange={(v) =>
+                          setEditForm((f) => ({ ...f, accountHolderName: v }))
+                        }
+                        required
+                      />
+                      <TextField
+                        label="Bank Name"
+                        value={editForm.bankName}
+                        onChange={(v) =>
+                          setEditForm((f) => ({ ...f, bankName: v }))
+                        }
+                        required
+                      />
+                      <TextField
+                        label="Account Number"
+                        value={editForm.accountNumber}
+                        onChange={(v) =>
+                          setEditForm((f) => ({ ...f, accountNumber: v }))
+                        }
+                        required
+                      />
+                      <TextField
+                        label="IFSC Code"
+                        value={editForm.ifscCode}
+                        onChange={(v) =>
+                          setEditForm((f) => ({
+                            ...f,
+                            ifscCode: v.toUpperCase(),
+                          }))
+                        }
+                        required
+                      />
+                      <TextField
+                        label="Branch Name"
+                        value={editForm.branchName ?? ""}
+                        onChange={(v) =>
+                          setEditForm((f) => ({ ...f, branchName: v }))
+                        }
+                      />
+                    </div>
+                    <div className="flex items-center gap-3 mt-4">
+                      <button
+                        onClick={() => handleSaveEdit(account.id)}
+                        disabled={savingEdit}
+                        className="rounded-lg bg-[#5b4ef9] px-4 py-2 text-sm font-medium text-white hover:bg-[#4a3ee0] disabled:opacity-60"
+                      >
+                        {savingEdit ? "Saving..." : "Save Changes"}
+                      </button>
+                      <button
+                        onClick={cancelEdit}
+                        disabled={savingEdit}
+                        className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+                      >
+                        <X className="w-4 h-4" />
+                        Cancel
+                      </button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {!account.isPrimary && (
+                ) : (
+                  <div
+                    key={account.id}
+                    className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 px-4 py-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="flex size-9 items-center justify-center rounded-lg bg-[#5b4ef9]/10 text-[#5b4ef9]">
+                        <Landmark className="w-4 h-4" />
+                      </span>
+                      <div>
+                        <p className="text-sm font-medium text-slate-900 flex items-center gap-2">
+                          {account.accountHolderName}
+                          {account.isPrimary && (
+                            <span className="text-xs font-medium text-amber-600 flex items-center gap-1">
+                              <Star className="w-3 h-3 fill-amber-500 text-amber-500" />{" "}
+                              Primary
+                            </span>
+                          )}
+                        </p>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {account.bankName} • {account.accountNumber} •{" "}
+                          {account.ifscCode}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {!account.isPrimary && (
+                        <button
+                          onClick={() => handleSetPrimary(account.id)}
+                          disabled={busyId === account.id}
+                          className="text-xs font-medium text-slate-600 hover:text-[#5b4ef9] disabled:opacity-60"
+                        >
+                          Make primary
+                        </button>
+                      )}
                       <button
-                        onClick={() => handleSetPrimary(account.id)}
+                        onClick={() => startEdit(account)}
                         disabled={busyId === account.id}
-                        className="text-xs font-medium text-slate-600 hover:text-[#5b4ef9] disabled:opacity-60"
+                        className="text-slate-400 hover:text-[#5b4ef9] disabled:opacity-60"
                       >
-                        Make primary
+                        <Pencil className="w-4 h-4" />
                       </button>
-                    )}
-                    <button
-                      onClick={() => handleDelete(account.id)}
-                      disabled={busyId === account.id}
-                      className="text-slate-400 hover:text-red-600 disabled:opacity-60"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                      <button
+                        onClick={() => handleDelete(account.id)}
+                        disabled={busyId === account.id}
+                        className="text-slate-400 hover:text-red-600 disabled:opacity-60"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ),
+              )}
             </div>
           )}
         </section>

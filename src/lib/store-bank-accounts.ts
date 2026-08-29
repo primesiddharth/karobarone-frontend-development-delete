@@ -31,6 +31,15 @@ export function createBankAccount(storeId: string, payload: CreateBankAccountPay
   });
 }
 
+export type UpdateBankAccountPayload = Partial<CreateBankAccountPayload>;
+
+export function updateBankAccount(accountId: string, payload: UpdateBankAccountPayload) {
+  return apiRequest<BankAccount>(`/api/v1/store-bank-accounts/${accountId}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
 export function deleteBankAccount(accountId: string) {
   return apiRequest<void>(`/api/v1/store-bank-accounts/${accountId}`, { method: "DELETE" });
 }

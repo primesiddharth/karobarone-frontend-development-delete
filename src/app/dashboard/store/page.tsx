@@ -1,10 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import { NoStoreNotice } from "@/components/dashboard/NoStoreNotice";
 import { ApiError } from "@/lib/api-client";
-import { Store, getStore, updateStore, publishStore, unpublishStore } from "@/lib/stores";
+import {
+  Store,
+  getStore,
+  updateStore,
+  publishStore,
+  unpublishStore,
+  deleteStore,
+} from "@/lib/stores";
 import {
   WebsiteSettings,
   getWebsiteSettings,
@@ -13,14 +21,29 @@ import {
 import { ExternalLink, Loader2 } from "lucide-react";
 
 export default function StoreProfilePage() {
-  const { session } = useAuth();
+  const { session, clearStoreId } = useAuth();
+  const router = useRouter();
 
   if (!session?.storeId) return <NoStoreNotice />;
 
-  return <StoreProfileContent storeId={session.storeId} />;
+  return (
+    <StoreProfileContent
+      storeId={session.storeId}
+      onStoreDeleted={() => {
+        clearStoreId();
+        router.push("/questionaree");
+      }}
+    />
+  );
 }
 
-function StoreProfileContent({ storeId }: { storeId: string }) {
+function StoreProfileContent({
+  storeId,
+  onStoreDeleted,
+}: {
+  storeId: string;
+  onStoreDeleted: () => void;
+}) {
   const [store, setStore] = useState<Store | null>(null);
   const [settings, setSettings] = useState<WebsiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
@@ -31,6 +54,8 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
   const [publishing, setPublishing] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -46,7 +71,11 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
         }
       } catch (err) {
         if (!cancelled) {
-          setLoadError(err instanceof ApiError ? err.message : "Could not load store details.");
+          setLoadError(
+            err instanceof ApiError
+              ? err.message
+              : "Could not load store details.",
+          );
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -94,7 +123,9 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
       setStore(updated);
       setSuccess("Store profile saved.");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not save store profile.");
+      setError(
+        err instanceof ApiError ? err.message : "Could not save store profile.",
+      );
     } finally {
       setSavingStore(false);
     }
@@ -116,7 +147,11 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
       setSettings(updated);
       setSuccess("Website settings saved.");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not save website settings.");
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Could not save website settings.",
+      );
     } finally {
       setSavingSettings(false);
     }
@@ -128,13 +163,37 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
     setSuccess("");
     setPublishing(true);
     try {
-      const updated = store.status === "published" ? await unpublishStore(storeId) : await publishStore(storeId);
+      const updated =
+        store.status === "published"
+          ? await unpublishStore(storeId)
+          : await publishStore(storeId);
       setStore(updated);
-      setSuccess(updated.status === "published" ? "Store is now live." : "Store unpublished.");
+      setSuccess(
+        updated.status === "published"
+          ? "Store is now live."
+          : "Store unpublished.",
+      );
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Could not update publish status.");
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Could not update publish status.",
+      );
     } finally {
       setPublishing(false);
+    }
+  };
+
+  const handleDeleteStore = async () => {
+    setError("");
+    setDeleting(true);
+    try {
+      await deleteStore(storeId);
+      onStoreDeleted();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Could not delete store.");
+      setDeleting(false);
+      setConfirmingDelete(false);
     }
   };
 
@@ -163,12 +222,16 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Store Profile</h1>
-            <p className="text-slate-500 mt-2">Update your store details, settings, and publish status.</p>
+            <p className="text-slate-500 mt-2">
+              Update your store details, settings, and publish status.
+            </p>
           </div>
           <div className="flex items-center gap-3">
             <span
               className={`text-xs font-medium px-3 py-1 rounded-full ${
-                store.status === "published" ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-600"
+                store.status === "published"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-slate-100 text-slate-600"
               }`}
             >
               {store.status === "published" ? "Published" : "Draft"}
@@ -188,13 +251,19 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
               disabled={publishing}
               className="rounded-lg bg-[#5b4ef9] px-4 py-2 text-sm font-medium text-white hover:bg-[#4a3ee0] disabled:opacity-60"
             >
-              {publishing ? "Working..." : store.status === "published" ? "Unpublish" : "Publish"}
+              {publishing
+                ? "Working..."
+                : store.status === "published"
+                  ? "Unpublish"
+                  : "Publish"}
             </button>
           </div>
         </div>
 
         {error && (
-          <p className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2">{error}</p>
+          <p className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg px-4 py-2">
+            {error}
+          </p>
         )}
         {success && (
           <p className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-2">
@@ -203,9 +272,15 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
         )}
 
         <section className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-slate-900">Store Details</h2>
+          <h2 className="text-lg font-semibold text-slate-900">
+            Store Details
+          </h2>
           <div className="grid sm:grid-cols-2 gap-4">
-            <TextField label="Store Name" value={store.name} onChange={(v) => updateStoreField("name", v)} />
+            <TextField
+              label="Store Name"
+              value={store.name}
+              onChange={(v) => updateStoreField("name", v)}
+            />
             <TextField
               label="Contact Person"
               value={store.contactPerson}
@@ -216,7 +291,12 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
               value={store.designation ?? ""}
               onChange={(v) => updateStoreField("designation", v)}
             />
-            <TextField label="Email" type="email" value={store.email} onChange={(v) => updateStoreField("email", v)} />
+            <TextField
+              label="Email"
+              type="email"
+              value={store.email}
+              onChange={(v) => updateStoreField("email", v)}
+            />
             <TextField
               label="Phone Number"
               type="tel"
@@ -252,7 +332,9 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
         </section>
 
         <section className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-slate-900">Website Settings</h2>
+          <h2 className="text-lg font-semibold text-slate-900">
+            Website Settings
+          </h2>
           <div className="grid sm:grid-cols-2 gap-4">
             <TextField
               label="Site Title"
@@ -275,10 +357,14 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
               onChange={(v) => updateSettingsField("currency", v)}
             />
             <div className="sm:col-span-2">
-              <label className="block text-sm text-slate-700 mb-1">Meta Description</label>
+              <label className="block text-sm text-slate-700 mb-1">
+                Meta Description
+              </label>
               <textarea
                 value={settings?.metaDescription ?? ""}
-                onChange={(e) => updateSettingsField("metaDescription", e.target.value)}
+                onChange={(e) =>
+                  updateSettingsField("metaDescription", e.target.value)
+                }
                 rows={3}
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#5b4ef9]/40"
               />
@@ -291,6 +377,41 @@ function StoreProfileContent({ storeId }: { storeId: string }) {
           >
             {savingSettings ? "Saving..." : "Save Website Settings"}
           </button>
+        </section>
+
+        <section className="bg-white border border-red-200 rounded-2xl p-6 space-y-3">
+          <h2 className="text-lg font-semibold text-red-700">Danger Zone</h2>
+          <p className="text-sm text-slate-500">
+            Deleting your store removes its profile, theme, sections, domains, and media permanently. This cannot be undone.
+          </p>
+          {!confirmingDelete ? (
+            <button
+              onClick={() => setConfirmingDelete(true)}
+              className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
+            >
+              Delete Store
+            </button>
+          ) : (
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <p className="text-sm font-medium text-red-700">Are you sure? This is permanent.</p>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleDeleteStore}
+                  disabled={deleting}
+                  className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60"
+                >
+                  {deleting ? "Deleting..." : "Yes, delete permanently"}
+                </button>
+                <button
+                  onClick={() => setConfirmingDelete(false)}
+                  disabled={deleting}
+                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </section>
       </div>
     </div>

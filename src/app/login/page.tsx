@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -22,7 +22,11 @@ export default function LoginPage() {
       await login({ email: email.trim(), password });
       router.push("/questionaree");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Something went wrong. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -44,11 +48,15 @@ export default function LoginPage() {
             <div className="bg-[#5b4ef9] p-2 rounded-lg">
               <Zap className="w-6 h-6 text-white" />
             </div>
-            <span className="text-2xl font-semibold text-gray-900">KarobarOne</span>
+            <span className="text-2xl font-semibold text-gray-900">
+              KarobarOne
+            </span>
           </div>
 
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Welcome Back
+            </h1>
             <p className="text-gray-600">Login to access your dashboard</p>
           </div>
 
@@ -105,7 +113,10 @@ export default function LoginPage() {
           <div className="mt-8 text-center">
             <p className="text-gray-600 text-sm">
               Don't have an account?{" "}
-              <Link href="/register" className="text-[#5b4ef9] hover:underline font-semibold">
+              <Link
+                href="/register"
+                className="text-[#5b4ef9] hover:underline font-semibold"
+              >
                 Sign up free
               </Link>
             </p>

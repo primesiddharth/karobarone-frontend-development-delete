@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Malayalam:wght@400;500;600;700&family=Noto+Sans+Gurmukhi:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap");
 
 :root {
   --background: #ffffff;
@@ -22,12 +22,20 @@ body {
 }
 
 @keyframes marquee-left {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 @keyframes marquee-right {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 .animate-marquee-left {
   animation: marquee-left 30s linear infinite;
@@ -67,8 +75,9 @@ iframe.goog-te-banner-frame {
 /* ---- Force script-correct fonts only on translated (non-English) pages ---- */
 html:not([lang="en"]) body,
 html:not([lang="en"]) body * {
-  font-family: 'Noto Sans Devanagari', 'Noto Sans Gujarati', 'Noto Sans Tamil',
-    'Noto Sans Telugu', 'Noto Sans Bengali', 'Noto Sans Kannada',
-    'Noto Sans Malayalam', 'Noto Sans Gurmukhi', 'Noto Sans Arabic',
-    'Noto Sans', sans-serif !important;
+  font-family:
+    "Noto Sans Devanagari", "Noto Sans Gujarati", "Noto Sans Tamil",
+    "Noto Sans Telugu", "Noto Sans Bengali", "Noto Sans Kannada",
+    "Noto Sans Malayalam", "Noto Sans Gurmukhi", "Noto Sans Arabic",
+    "Noto Sans", sans-serif !important;
 }

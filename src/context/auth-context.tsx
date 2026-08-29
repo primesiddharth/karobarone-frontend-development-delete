@@ -18,6 +18,7 @@ interface AuthContextType {
   login: (payload: ChatAuthLoginPayload) => Promise<ChatAuthSession>;
   logout: () => void;
   setStoreId: (storeId: string) => void;
+  clearStoreId: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -71,9 +72,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     []
   );
 
+  const clearStoreId = useCallback(() => {
+    setSession((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, storeId: null };
+      setStoredSession(next);
+      return next;
+    });
+  }, []);
+
   return (
     <AuthContext.Provider
-      value={{ session, isAuthenticated: !!session, loading, register, login, logout, setStoreId }}
+      value={{ session, isAuthenticated: !!session, loading, register, login, logout, setStoreId, clearStoreId }}
     >
       {children}
     </AuthContext.Provider>

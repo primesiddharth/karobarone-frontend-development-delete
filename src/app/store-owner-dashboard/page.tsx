@@ -12,7 +12,8 @@ const stories: Story[] = [
     code: "DB",
     title: "Dashboard",
     timeline: "1",
-    description: "Sales, orders, alerts, and daily activity in one simple view.",
+    description:
+      "Sales, orders, alerts, and daily activity in one simple view.",
   },
   {
     code: "SP",
@@ -76,7 +77,9 @@ export default function StoreOwnerDashboardPage() {
               <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
                 Store owner portal
               </p>
-              <h1 className="text-lg font-semibold text-slate-900">Store Owner Dashboard</h1>
+              <h1 className="text-lg font-semibold text-slate-900">
+                Store Owner Dashboard
+              </h1>
             </div>
           </div>
 
@@ -95,19 +98,24 @@ export default function StoreOwnerDashboardPage() {
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Overview</p>
+                <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
+                  Overview
+                </p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight">
                   Clean dashboard for daily store work
                 </h2>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-                  This page keeps the same store-owner features you shared in the screenshot, but
-                  presents them in a simple and normal UI that matches the rest of the website.
+                  This page keeps the same store-owner features you shared in
+                  the screenshot, but presents them in a simple and normal UI
+                  that matches the rest of the website.
                 </p>
               </div>
 
               <div className="rounded-2xl bg-[#5b4ef9]/5 px-4 py-3 text-sm text-slate-700">
                 <p className="font-medium text-slate-900">Included sections</p>
-                <p className="mt-1">Dashboard, profile, website, customers, staff, settings</p>
+                <p className="mt-1">
+                  Dashboard, profile, website, customers, staff, settings
+                </p>
               </div>
             </div>
 
@@ -122,9 +130,13 @@ export default function StoreOwnerDashboardPage() {
                       <span className="flex size-9 items-center justify-center rounded-xl bg-white text-xs font-semibold text-[#5b4ef9] shadow-sm">
                         {item.icon}
                       </span>
-                      <span className="text-sm text-slate-600">{item.label}</span>
+                      <span className="text-sm text-slate-600">
+                        {item.label}
+                      </span>
                     </div>
-                    <span className="text-lg font-semibold text-slate-900">{item.value}</span>
+                    <span className="text-lg font-semibold text-slate-900">
+                      {item.value}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -133,17 +145,26 @@ export default function StoreOwnerDashboardPage() {
             <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium text-slate-900">Quick flow</p>
+                  <p className="text-sm font-medium text-slate-900">
+                    Quick flow
+                  </p>
                   <p className="mt-1 text-sm text-slate-600">
-                    Dashboard to profile to settings is kept simple and easy to scan.
+                    Dashboard to profile to settings is kept simple and easy to
+                    scan.
                   </p>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-slate-500">
-                  <span className="rounded-full border border-slate-200 px-3 py-1">Dashboard</span>
+                  <span className="rounded-full border border-slate-200 px-3 py-1">
+                    Dashboard
+                  </span>
                   <span aria-hidden="true">{"->"}</span>
-                  <span className="rounded-full border border-slate-200 px-3 py-1">Profile</span>
+                  <span className="rounded-full border border-slate-200 px-3 py-1">
+                    Profile
+                  </span>
                   <span aria-hidden="true">{"->"}</span>
-                  <span className="rounded-full border border-slate-200 px-3 py-1">Settings</span>
+                  <span className="rounded-full border border-slate-200 px-3 py-1">
+                    Settings
+                  </span>
                 </div>
               </div>
             </div>
@@ -152,8 +173,12 @@ export default function StoreOwnerDashboardPage() {
           <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Module list</p>
-                <h2 className="mt-2 text-2xl font-semibold">Stories included in the dashboard</h2>
+                <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
+                  Module list
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold">
+                  Stories included in the dashboard
+                </h2>
               </div>
               <div className="rounded-full bg-[#5b4ef9]/10 px-3 py-1 text-sm font-medium text-[#5b4ef9]">
                 Timeline 8
@@ -176,8 +201,12 @@ export default function StoreOwnerDashboardPage() {
                         {story.code}
                       </span>
                       <div>
-                        <p className="text-sm font-medium text-slate-900">{story.title}</p>
-                        <p className="mt-1 text-sm text-slate-600">{story.description}</p>
+                        <p className="text-sm font-medium text-slate-900">
+                          {story.title}
+                        </p>
+                        <p className="mt-1 text-sm text-slate-600">
+                          {story.description}
+                        </p>
                       </div>
                     </div>
                     <span className="rounded-full border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-600">
@@ -193,12 +222,15 @@ export default function StoreOwnerDashboardPage() {
         <section className="mt-6 rounded-3xl border border-slate-200 bg-white shadow-sm">
           <div className="flex flex-col gap-4 border-b border-slate-200 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Detail view</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
+                Detail view
+              </p>
               <h2 className="mt-2 text-2xl font-semibold text-slate-900">
                 Same structure as the screenshot
               </h2>
               <p className="mt-2 text-sm text-slate-600">
-                Simple row-based layout, no heavy styling, and easy to read on the homepage theme.
+                Simple row-based layout, no heavy styling, and easy to read on
+                the homepage theme.
               </p>
             </div>
             <div className="flex items-center gap-3 text-sm text-slate-500">
@@ -264,13 +296,16 @@ export default function StoreOwnerDashboardPage() {
         <section className="mt-6 rounded-3xl border border-[#5b4ef9]/15 bg-[linear-gradient(180deg,rgba(91,78,249,0.08),#ffffff)] shadow-sm">
           <div className="flex flex-col gap-4 px-6 py-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-[#5b4ef9]">Platform portal</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-[#5b4ef9]">
+                Platform portal
+              </p>
               <h2 className="mt-2 text-2xl font-semibold text-slate-950">
                 Need the admin control room too?
               </h2>
               <p className="mt-2 max-w-2xl text-sm text-slate-600">
-                The platform admin portal is now available in its own folder and route, with all
-                the modules from the screenshot mapped into a web UI.
+                The platform admin portal is now available in its own folder and
+                route, with all the modules from the screenshot mapped into a
+                web UI.
               </p>
             </div>
 
